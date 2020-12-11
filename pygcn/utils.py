@@ -1,11 +1,13 @@
 import numpy as np
+from numpy.core.numeric import identity
 import scipy.sparse as sp
 import torch
 
 
 def encode_onehot(labels):
     classes = set(labels)
-    classes_dict = {c: np.identity(len(classes))[i, :] for i, c in
+    identity_matrix = np.identity(len(classes))
+    classes_dict = {c: identity_matrix[i, :] for i, c in
                     enumerate(classes)}
     labels_onehot = np.array(list(map(classes_dict.get, labels)),
                              dtype=np.int32)
