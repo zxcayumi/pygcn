@@ -44,7 +44,7 @@ adj, features, labels, idx_train, idx_val, idx_test = load_data()
 # Model and optimizer
 model = GCN(nfeat=features.shape[1],
             nhid=args.hidden,
-            nclass=labels.max().item() + 1,
+            nclass=labels.max().item() + 1, #类的个数（最大索引+1）
             dropout=args.dropout)
 optimizer = optim.Adam(model.parameters(),
                        lr=args.lr, weight_decay=args.weight_decay)
@@ -61,11 +61,11 @@ if args.cuda:
 
 def train(epoch):
     t = time.time()
-    model.train()
+    model.train() #设置为训练模式
     optimizer.zero_grad()
     output = model(features, adj)
-    loss_train = F.nll_loss(output[idx_train], labels[idx_train])
-    acc_train = accuracy(output[idx_train], labels[idx_train])
+    loss_train = F.nll_loss(output[idx_train], labels[idx_train]) #因为output已经完成softmax和log操作，所以无需用F.cross_entropy
+    acc_train = accuracy(output[idx_train], labels[idx_train]) 
     loss_train.backward()
     optimizer.step()
 
